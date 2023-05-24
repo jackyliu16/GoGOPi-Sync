@@ -40,6 +40,15 @@ for i in range(RGB.numPixels()):
 
 
 def setMotor(index, speed):
+    """设定马达转速
+
+    Args:
+        index (int): 马达编号 
+        speed (int): 马达转速（单位不详） 
+
+    Returns:
+        int: 当前马达转速 
+    """
     if index < 1 or index > 4:
         raise AttributeError("Invalid motor num: %d"%index)
     if index == 2 or index == 4:
@@ -57,6 +66,17 @@ def setMotor(index, speed):
     return __motor_speed[index]
     
 def getMotor(index):
+    """返回马达转速
+
+    Args:
+        index (int): the number of motor 
+
+    Raises:
+        AttributeError: number illegal
+
+    Returns:
+        int: motor speed 
+    """
     if index < 1 or index > 4:
         raise AttributeError("Invalid motor num: %d"%index)
     index = index - 1

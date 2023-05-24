@@ -8,6 +8,7 @@ import Functions.ColorTracking as ColorTracking
 import Functions.FaceTracking as FaceTracking
 import Functions.FingerDetect as FingerDetect
 import Functions.Avoidance as Avoidance
+import Functions.AutomaticLineInspection as AutoLineInspection
 
 RunningFunc = "" #当前运行中的玩法的序号
 LastHeartbeat = 0 #最后一次心跳的时间戳
@@ -21,6 +22,7 @@ FUNCTIONS = {
     "3": FaceTracking,  # 人脸追踪
     "4": FingerDetect,  # 手势识别
     "5": Avoidance,  # 自动避障(超声波)
+    "6": AutoLineInspection,
     "9": lab_adjust
 }
 
@@ -52,7 +54,7 @@ def loadFunc(newf):
             if RunningFunc in FUNCTIONS:
                 FUNCTIONS[RunningFunc].exit() #若当前由玩法正在运行则先退出当前玩法
             RunningFunc = str(new_func)
-            cam.camera_close() #重新关开一次摄像头
+            cam.camera_close() #重新关开一次摄像头(更新缓存为空)
             cam.camera_open()
             FUNCTIONS[RunningFunc].init() #调用新玩法的初始化
         except Exception as e:
