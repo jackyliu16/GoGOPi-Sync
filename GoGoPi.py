@@ -144,7 +144,7 @@ if __name__ == '__main__':
         HW_DBG = True
         try:
             db = int(args.func)
-            if 1 <= db <= 5:
+            if 1 <= db <= 6:
                 Running.DisableHeartbeat = True
                 Running.loadFunc((db,))
                 if db == 2:
