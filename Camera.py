@@ -53,3 +53,11 @@ class Camera:
             except Exception as e:
                 time.sleep(0.05)
 
+    def get_camera_resolution(self) -> tuple[int, int]:
+        """返回当前摄像头尺寸参数
+
+        Returns:
+            tuple[int, int]: （长度，宽度） 
+        """
+        return (self.cap.get(cv2.CAP_PROP_FRAME_HEIGHT), self.cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+
