@@ -8,10 +8,15 @@ import time
 import datetime
 import threading
 import queue
+import numpy as np
 import JackyLab as lab
 
-__isRunning = False
+# env virable
+from Running import cam
+
 __isStart = False
+__isRunning = False
+__BinarizationThreshold = 80
 
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
@@ -31,8 +36,15 @@ def init():
 def start():
     """准备运行玩法
     """
+    global cam
     global __isStart, __isRunning
+    global __mask
     __isStart = True
+    
+    # 设置掩码以获取部分图像数据进行判断
+    resolution = cam.get_camera_resolution
+    __mask = np.zeros(resolution, dtype=np.uint8)
+    __mask = cv2.rectangle(__mask, (0, int(resolution[0]*0.75)), (resolution[1], int(resolution[0]*0.8)), 255, thickness=-1)
 
 def exit():
     """退出玩法
@@ -47,8 +59,14 @@ def run(img):
         return img
     
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+    _, thresh = cv2.threshold(gray, __BinarizationThreshold, 255, cv2.THRESH_BINARY)
+
+    # 获取掩码部分的数据
     
+    
+    
+    
+    # 将掩码叠加在原始图像上返回
     
     return img
 
