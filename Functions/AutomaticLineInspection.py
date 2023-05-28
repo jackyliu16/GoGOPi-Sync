@@ -10,6 +10,9 @@ import threading
 import queue
 import JackyLab as lab
 
+__isRunning = False
+__isStart = False
+
 if sys.version_info.major == 2:
     print('Please run this program with python3!')
     sys.exit(0)
@@ -28,16 +31,24 @@ def init():
 def start():
     """准备运行玩法
     """
-    global isRunning
-    isRunning = True
+    global __isStart, __isRunning
+    __isStart = True
 
 def exit():
     """退出玩法
     """
-    global isRunning
-
-    isRunning = False
+    global __isStart, __isRunning
+    __isRunning = True
 
 def run(img):
+    global __isRunning
+    
+    if not __isRunning:
+        return img
+    
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+    
+    
     return img
 
