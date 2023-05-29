@@ -186,7 +186,7 @@ def SetFaceTrackingWheel(new_st = 0):
     return runbymainth(FaceTracking.setWheel, (new_st, ))
 
 # 设置颜色阈值
-# 参数：颜色lab
+# 参数：颜色 lab
 # 例如：[{'red': ((0, 0, 0), (255, 255, 255))}]
 @dispatcher.add_method
 def SetLABValue(*lab_value):

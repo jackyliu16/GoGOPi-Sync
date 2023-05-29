@@ -46,6 +46,9 @@ def binary_image(frame):
     cv2.drawContours(monitoring_area, contours, -1, (120), 3)
     areaMaxContour = getAreaMaxContour(contours)  # 找到最大的轮廓
 
+    import math
+    print(math.fabs(cv2.contourArea(areaMaxContour)))
+
     tracking(__Area, areaMaxContour)
 
     return monitoring_area 

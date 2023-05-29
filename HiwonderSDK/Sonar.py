@@ -46,7 +46,7 @@ class Sonar:
             except:
                 pass
 
-    def show(self): #占位，与扩展板RGB保持调用一致
+    def show(self): #占位，与扩展板 RGB 保持调用一致
         pass
 
     def numPixels(self):

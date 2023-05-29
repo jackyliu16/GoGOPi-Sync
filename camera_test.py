@@ -11,7 +11,7 @@ if sys.version_info.major == 2:
     print('Please run this program with python3!')
     sys.exit(0)
 
-#usb摄像头获取画面
+#usb 摄像头获取画面
 class USBCamera():
 
     cmd_restart = "sudo systemctl restart mjpg_streamer@"
@@ -31,7 +31,7 @@ class USBCamera():
             if resolution is not None:
                 #将分辨率取整，取正
                 self.resolution = (abs(int(resolution[0])), abs(int(resolution[1])))
-                #如果分辨率不在32～1920之间，打印提示信息，退出程序
+                #如果分辨率不在 32～1920 之间，打印提示信息，退出程序
                 if 1920 < self.resolution[0] or self.resolution[0] < 32 or 1920 < self.resolution[1] or self.resolution[1] < 32:               
                     print('Wrong resolution, resolution should be between 32 and 1920')
                     sys.exit(0)
@@ -65,7 +65,7 @@ class USBCamera():
                 print('Current device: video' + i + '\n')
                 return int(i)
          
-        #如果设备驱动序号大于4就认为摄像头不存在，否则返回设备号
+        #如果设备驱动序号大于 4 就认为摄像头不存在，否则返回设备号
         return None
     
     #返回一帧图片

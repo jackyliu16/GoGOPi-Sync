@@ -81,15 +81,6 @@ def tracking(area: tuple[int, int], areaMaxContour: tuple):
             diff = abs(img_center_x - centerX)
             setMotorSpeedDiff(diff) # 看看能不能调参？
 
-            #err = abs(img_center_x - centerX)
-            #if err <= 30:
-            #    servo1_pid.SetPoint = centerX       # 应当在的位置
-            #else:
-            #    servo1_pid.SetPoint = centerX + 20  # 额外加多一点
-            #servo1_pid.update(centerX)
-
-            # tmp = int(servo1_pulse + servo1_pid.output)
-
             # NOTE 需要提前测试
             
             
