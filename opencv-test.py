@@ -1,11 +1,27 @@
 import cv2
 import numpy as np
+# from Functions.ColorTracking import getAreaMaxContour
+from Functions.JackyLab import getAreaMaxContour
+from HiwonderSDK.PID import PID
+from HiwonderSDK.Board import Board
+from HiwonderSDK.Misc import Misc
+from Functions.JackyLab import *
 
 __BinarizationThreshold = 80
-
-
+__Area = []
+servo1_pid = PID(P=0.5, I=0.052, D=0.035)  # pid 初始化 #上下
+servo2_pid = PID(P=0.45, I=0.052, D=0.05)  # pid 初始化 #左右
+pitch_pid = PID(P=0.1, I=0.01, D=0.01) #车身前后
+pitch_pid1 = PID(P=0.08, I=0.01, D=0.01)
+yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
+servo1_pulse = 1500
+servo2_pulse = 1500
+pitch_speed = 0
+yaw_speed = 0
+target_color = ""
+# 
 def binary_image(frame):
-    global resolution
+    global resolution, __Area
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, __BinarizationThreshold, 255, cv2.THRESH_BINARY)
 
@@ -14,10 +30,25 @@ def binary_image(frame):
     # __mask = cv2.rectangle(__mask, (int(resolution[0] * 0.75), 0), (int(resolution[0] * 0.80), resolution[1]), (255))
     __mask = cv2.rectangle(__mask, (0, int(resolution[0]*0.75)), (resolution[1], int(resolution[0]*0.8)), 255, thickness=-1)
 
-    mask = cv2.bitwise_not(__mask, None)
-    masked_img = cv2.bitwise_and(binary, binary, mask=__mask)
+    # mask = cv2.bitwise_not(__mask, None)
+    # masked_img = cv2.bitwise_and(binary, binary, mask=__mask)
 
-    return masked_img
+    __Area = [
+        # (宽度，长度)
+        (0, int(resolution[0]*0.70)),
+        (resolution[1], int(resolution[0]*0.8))
+    ]
+    # print(binary.shape)
+    monitoring_area = binary[__Area[0][1]: __Area[1][1], __Area[0][0]:__Area[1][0]]
+    
+    contours = cv2.findContours(monitoring_area, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
+
+    cv2.drawContours(monitoring_area, contours, -1, (120), 3)
+    areaMaxContour = getAreaMaxContour(contours)  # 找到最大的轮廓
+
+    tracking(__Area, areaMaxContour)
+
+    return monitoring_area 
 
 if __name__ == "__main__":
     global resolution
