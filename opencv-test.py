@@ -49,7 +49,7 @@ def binary_image(frame):
     # print(f"x:{centerX}, y:{centerY}")
     cv2.circle(binary, (int(centerX), int(centerY + __Area[0][0])), 1, (127), 3) 
     
-    tracking(__Area, areaMaxContour)
+    # tracking(__Area, areaMaxContour)
     
     return binary
 

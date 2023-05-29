@@ -4,7 +4,7 @@ this is a lab just using by jacky
 import math
 import cv2
 import numpy as np
-SPEED_LIMIT = 50 
+SPEED_LIMIT = 60 
 
 import HiwonderSDK.Board as Board
 import HiwonderSDK.PID as PID
@@ -42,25 +42,59 @@ def getAreaMaxContour(contours):
     return area_max_contour, contour_area_max  # 返回最大的轮廓
 
 def setMotorSpeedDiff(speed: int):
-    """产生速度差
+    """产生速度差(40以下不敏感)
 
     Args:
         speed (int): 当想要左边马达相较于右边马达速度提升的时候设定为负，否则为正
     """
     import HiwonderSDK.Board as Board
-    montor_l = Board.getMotor(1, speed)
-    montor_r = Board.getMotor(2, speed)
+    montor_l = Board.getMotor(1)
+    montor_r = Board.getMotor(2)
+    if montor_l > 0 or montor_r < 0:
+        print("something error: l:{montol_l} r:{montor_r}")
 
     diff = montor_l + montor_r # BC montor_r 是反过来的
-    if speed > SPEED_LIMIT:
-        print("error: out of the range")
-    if diff < SPEED_LIMIT:
-        # NOTE 左边增加或者右边增加
-        Board.setMotor(1, montor_l + speed) if speed < 0 else Board.setMotor(2,  montor_r - speed)
+    print(f"prev speed: {Board.getMotor(1)}, {Board.getMotor(2)}")
+    if abs(montor_l) > SPEED_LIMIT or montor_r > SPEED_LIMIT:
+        if -montor_l > SPEED_LIMIT: # 正向速度
+            if speed < 0:
+                print(2)
+                # continue add speed
+                Board.setMotor(1, abs(montor_l - speed)) # 1 value is fu
+            else:
+                print(3)
+                # reduce speed
+                Board.setMotor(1, abs(montor_l + speed))
+        if montor_r > SPEED_LIMIT:
+            if speed > 0:
+                print(4)
+                # add speed
+                Board.setMotor(2, montor_r - speed)
+            else: 
+                print(5)
+                Board.setMotor(2, montor_r + speed) 
     else:
-        # NOTE 选择二者中相较于 0 最远的
-        # TODO untest this funciton
-        Board.setMotor(1, montor_l - speed) if diff < 0 else Board.setMotor(2, montor_r + speed)
+        if speed > 0:
+            print(6)
+            Board.setMotor(2, montor_r + speed)
+        else:
+            print(7)
+            Board.setMotor(1, abs(montor_l + speed))
+    print(f"current speed: {Board.getMotor(1)}, {Board.getMotor(2)}")
+
+@DeprecationWarning
+def angle_change(angle: int):
+    # 舵机控制不够精准而无法使用
+    pass
+    # import time
+    # import HiwonderSDK.Board as Board
+    # setBothMotor(0)
+# 
+    # Board.setMotor(1, 40)
+    # Board.setMotor(2, -40)
+    # time.sleep(2)
+    # setBothMotor(0)
+    
 
 def buzzer_for_second(second: int) -> None:
     import time
@@ -79,12 +113,13 @@ def diff_speed(motor: int, speed: int) -> None:
     else:
         print("add speed")
         Board.setMotor(motor, Board.getMotor(motor) + speed)
+    print(f"current speed: {Board.getMotor(1)}, {Board.getMotor(2)}")
 
 # 尝试能否通过这个来影响 diff
 def sigmoid(x: float):
     return 1 / ( 1 + np.exp(-x) )
     
-yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
+# yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
 def tracking(area, areaMaxContour: tuple):
     # copy from ColorTracking
     import math
@@ -93,15 +128,10 @@ def tracking(area, areaMaxContour: tuple):
     if areaMaxContour is not None:  # 有找到最大面积
         (centerX, centerY), radius = cv2.minEnclosingCircle(
             areaMaxContour)  # 获取最小外接圆
-        if radius >= 3:
+        if radius >= 1:
             # 简易算法
+            pass
             
-            diff = abs(img_center_x - centerX)
-
-            if diff < 30:
-                yaw_pid.setPoint = centerX
-            else:
-                yaw_pid.setPoint = img_center_y + 20
             
             
             

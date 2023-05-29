@@ -1,4 +1,5 @@
 import sys
+from typing import *
 import cv2
 import time
 import threading
@@ -53,7 +54,7 @@ class Camera:
             except Exception as e:
                 time.sleep(0.05)
 
-    def get_camera_resolution(self) -> tuple[int, int]:
+    def get_camera_resolution(self) -> Tuple[int, int]:
         """返回当前摄像头尺寸参数
 
         Returns:

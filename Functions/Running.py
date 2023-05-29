@@ -21,7 +21,6 @@ FUNCTIONS = {
     "2": ColorTracking,  # 颜色追踪
     "3": FaceTracking,  # 人脸追踪
     "4": FingerDetect,  # 手势识别
-    "5": Avoidance,  # 自动避障(超声波)
     "6": AutoLineInspection,
     "9": lab_adjust
 }

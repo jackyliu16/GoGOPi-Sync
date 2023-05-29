@@ -118,6 +118,7 @@ def exit():
 
 #初始化
 def init():
+    print('hello')
     load_config()
     reset()
 
