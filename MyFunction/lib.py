@@ -60,3 +60,10 @@ def mapping(points: Tuple[Tuple[int, int], Tuple[int, int]]) -> Tuple[Tuple[int,
         (int(camera_size[0] * points[0][0]), int(camera_size[1] * points[0][1])),
         (int(camera_size[0] * points[1][0]), int(camera_size[1] * points[1][1])),
     )
+
+def setBuzzerForSecond(time: int):
+    import time
+    import HiwonderSDK.Board as Board
+    Board.setBuzzer(1)
+    time.sleep(time)
+    Board.setBuzzer(0)
