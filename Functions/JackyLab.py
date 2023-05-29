@@ -3,6 +3,7 @@ this is a lab just using by jacky
 """
 import math
 import cv2
+import numpy as np
 SPEED_LIMIT = 20
 
 def setBothMotor(speed: int):
@@ -62,6 +63,10 @@ def diff_speed(motor: int, speed: int) -> None:
     else:
         Board.setMoter(motor, Board.getMotor(motor) + 1)
 
+# 尝试能否通过这个来影响 diff？
+def sigmoid(x: float):
+    return 1 / ( 1 + np.exp(-x) )
+    
 def tracking(area: tuple[int, int], areaMaxContour: tuple):
     # copy from ColorTracking
     import math
@@ -74,7 +79,7 @@ def tracking(area: tuple[int, int], areaMaxContour: tuple):
             # 简易算法
             
             diff = abs(img_center_x - centerX)
-            setMotorSpeedDiff(diff)
+            setMotorSpeedDiff(diff) # 看看能不能调参？
 
             #err = abs(img_center_x - centerX)
             #if err <= 30:
