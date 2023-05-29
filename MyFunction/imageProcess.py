@@ -43,9 +43,10 @@ def binarization(img: np.ndarray) -> np.ndarray:
 def get_monitoring_area(img: np.ndarray) -> np.ndarray:
     """using the area env viriable to shrink the area and return it 
     """
-    from MyFunction.run import area
-    monitoring_area = img[area[0][0]:area[1][0], area[0][1]: area[1][1]]
-    return monitoring_area
+    # from MyFunction.run import area
+    # monitoring_area = img[area[0][0]:area[1][0], area[0][1]: area[1][1]]
+    area = lib.mapping(MONITORING_AREA)
+    return img[area[0][0]:area[1][0], area[0][1]: area[1][1]]
 
 def add_mark_point(img: np.ndarray, point: Tuple[int, int]) -> np.ndarray:
     """add a mark point into image
