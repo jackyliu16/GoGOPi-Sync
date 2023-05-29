@@ -76,7 +76,7 @@ def diff_speed(motor: int, speed: int) -> None:
         print("add speed")
         Board.setMotor(motor, Board.getMotor(motor) + speed)
 
-# 尝试能否通过这个来影响 diff？
+# 尝试能否通过这个来影响 diff
 def sigmoid(x: float):
     return 1 / ( 1 + np.exp(-x) )
     
@@ -92,10 +92,9 @@ def tracking(area, areaMaxContour: tuple):
             # 简易算法
             
             diff = abs(img_center_x - centerX)
-            setMotorSpeedDiff(diff) # 看看能不能调参？
+            setMotorSpeedDiff(diff)
 
             # NOTE 需要提前测试
-            
             
             ########pid 处理#########
             #以图像的中心点的 x，y 坐标作为设定的值，以当前 x，y 坐标作为输入#
