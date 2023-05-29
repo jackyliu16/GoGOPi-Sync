@@ -7,7 +7,6 @@ if __name__ == "__main__":
     Run.init(resolution)
     while True:
         ret, img = CAM.read()
-        print(type(img))
         img = Run.run(img)
         cv2.imshow('frame', img)
         

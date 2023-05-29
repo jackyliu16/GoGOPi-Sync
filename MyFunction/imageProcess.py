@@ -1,9 +1,9 @@
 from MyFunction.config import *
+import MyFunction.lib as lib
 import cv2
 import yaml_handle
 import numpy as np
 import math
-from MyFunction import lib
 from typing import *
 
 lab_data = None
@@ -40,3 +40,29 @@ def binarization(img: np.ndarray) -> np.ndarray:
     _, binary =  cv2.threshold(gray, BINARIZATION_LIMIT, 255, cv2.THRESH_BINARY)
     return binary
 
+def get_monitoring_area(img: np.ndarray) -> np.ndarray:
+    """using the area env viriable to shrink the area and return it 
+    """
+    from MyFunction.Run import area
+    monitoring_area = img[area[0][0]:area[1][0], area[0][1]: area[1][1]]
+    return monitoring_area
+
+def add_mark_point(img: np.ndarray, point: Tuple[int, int]) -> np.ndarray:
+    """add a mark point into image
+
+    Args:
+        point (Tuple[int, int]): (x, y) 
+    """
+    cv2.circle(img, (int(point[0]), int(point[1])), 1, 127, 10)
+
+def get_center_of_maximum_area(img: np.ndarray) -> Tuple[int, int]:
+    """get the center of the largest region(min peripheral circle) in the image.
+    """
+    img_INV = cv2.bitwise_not(img) # whiled but neccessary
+    contours = cv2.findContours(img_INV, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
+    areaMaxContour, value = lib.getAreaMaxContour(contours)  # 找到最大的轮廓
+
+    # TODO 需要添加一个限制一定存在Contour的选择项目
+    (centerX, centerY), radius = cv2.minEnclosingCircle(areaMaxContour)  # 获取最小外接圆
+    
+    return (centerX, centerY)
