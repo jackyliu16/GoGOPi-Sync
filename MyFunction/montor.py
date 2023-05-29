@@ -15,7 +15,6 @@ def move(point: Tuple[int, int]) -> None:
     img_center_y = (area[0][1] + area[1][1]) / 2
     x, y = point
     err = abs(img_center_y - x)
-    print(f"img[{img_center_y}], x{x}, y{y}")
     if err < 30:
         motor_pid.setPoint = x
     else:
@@ -24,17 +23,6 @@ def move(point: Tuple[int, int]) -> None:
     motor_pid.update(x)
     tmp = motor_pid.output
     print(f"tmp: {tmp}")
-    setMotor(1, getMotor(1) - tmp * ADD_SPEED)
-    setMotor(2, getMotor(2) + tmp * ADD_SPEED)
-
-    diff = x - img_center_y
-    # print(f"diff{diff}")
-        
-
-
-
-    
-    
-    
-
+    setMotor(1, int(getMotor(1) - tmp * ADD_SPEED))
+    setMotor(2, int(getMotor(2) + tmp * ADD_SPEED))
     
