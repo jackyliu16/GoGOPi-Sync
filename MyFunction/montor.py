@@ -1,7 +1,7 @@
 from HiwonderSDK.PID import PID
 from typing import *
-from MyFunction.lib import *
-from MyFunction.config import *
+from MyFunction.lib import setMotor, getMotor, setBothMotor
+from MyFunction.config import ADD_SPEED, BASE_SPEED
 
 motor_pid = PID(P=0.01, I=0.01, D=0.008)
 

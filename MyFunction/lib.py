@@ -41,3 +41,22 @@ def setBothMotor(speed: int):
     """
     setMotor(1, speed)
     setMotor(2, speed)
+
+def mapping(points: Tuple[Tuple[int, int], Tuple[int, int]]) -> Tuple[Tuple[int, int], Tuple[int, int]]:
+    """mapping precentage tuple into precentage * resolution
+
+    Args:
+        points (Tuple[Tuple[int, int], Tuple[int, int]]): the precentage of two point
+
+    Returns:
+        Tuple[Tuple[int, int], Tuple[int, int]]: _description_
+    """
+    from MyFunction.run import camera_size
+    print(camera_size)
+    print(points)
+    print(points[0][0])
+    print(camera_size[0] * points[0][0])
+    return (
+        (int(camera_size[0] * points[0][0]), int(camera_size[1] * points[0][1])),
+        (int(camera_size[0] * points[1][0]), int(camera_size[1] * points[1][1])),
+    )
