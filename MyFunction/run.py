@@ -73,8 +73,8 @@ def run(img):
         # check_if_get_ending_point(monitoring_area)
         if not __endingFlags:
             __endingFlags = time.time() if check_if_get_ending_point(monitoring_area) else None 
-            
         return gray
+            
     return img
         
 
