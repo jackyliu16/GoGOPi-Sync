@@ -24,7 +24,6 @@ def binary_image(frame):
     global resolution, __Area
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     _, binary = cv2.threshold(gray, __BinarizationThreshold, 255, cv2.THRESH_BINARY)
-
     __mask = np.zeros(resolution, dtype=np.uint8)
     # rectangle_mask = (__mask, resolution)
     # __mask = cv2.rectangle(__mask, (int(resolution[0] * 0.75), 0), (int(resolution[0] * 0.80), resolution[1]), (255))
@@ -34,17 +33,25 @@ def binary_image(frame):
     # masked_img = cv2.bitwise_and(binary, binary, mask=__mask)
 
     __Area = [
-        # (宽度，长度)
-        (0, int(resolution[0]*0.70)),
-        (resolution[1], int(resolution[0]*0.8))
+        # (x, y)
+        (int(resolution[0]*0.70), 0), 
+        (int(resolution[0]*0.80), resolution[1])
     ]
     # print(binary.shape)
-    monitoring_area = binary[__Area[0][1]: __Area[1][1], __Area[0][0]:__Area[1][0]]
+    monitoring_area = binary[__Area[0][0]:__Area[1][0], __Area[0][1]: __Area[1][1]]
     
     contours = cv2.findContours(monitoring_area, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
 
     cv2.drawContours(monitoring_area, contours, -1, (120), 3)
-    areaMaxContour = getAreaMaxContour(contours)  # 找到最大的轮廓
+    areaMaxContour, maxsize = getAreaMaxContour(contours)  # 找到最大的轮廓
+
+    (centerX, centerY), radius = cv2.minEnclosingCircle(
+            areaMaxContour)  # 获取最小外接圆
+    img_center_x = ((__Area[0][0]+__Area[0][1])/2) 
+    print(img_center_x, centerX)
+    diff = math.fabs(img_center_x - centerX)
+
+    print(diff)
 
     return monitoring_area 
 
@@ -53,7 +60,6 @@ if __name__ == "__main__":
     cap = cv2.VideoCapture(0)
     
     resolution = (int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)))
-    print(resolution)
     while True:
         ret, frame = cap.read()
         binary = binary_image(frame)
