@@ -26,8 +26,8 @@ range_rgb = {
 }
 
 isRunning = False
-servo1_pid = PID(P=0.5, I=0.052, D=0.035)  # pid初始化 #上下
-servo2_pid = PID(P=0.45, I=0.052, D=0.05)  # pid初始化 #左右
+servo1_pid = PID(P=0.5, I=0.052, D=0.035)  # pid 初始化 #上下
+servo2_pid = PID(P=0.45, I=0.052, D=0.05)  # pid 初始化 #左右
 pitch_pid = PID(P=0.1, I=0.01, D=0.01) #车身前后
 pitch_pid1 = PID(P=0.08, I=0.01, D=0.01)
 yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
@@ -58,11 +58,11 @@ def getAreaMaxContour(contours):
         contour_area_temp = math.fabs(cv2.contourArea(c))  # 计算轮廓面积
         if contour_area_temp > contour_area_max:
             contour_area_max = contour_area_temp
-            if contour_area_temp > 20:  # 只有在面积大于20，最大面积的轮廓才是有效的，以过滤干扰
+            if contour_area_temp > 20:  # 只有在面积大于 20，最大面积的轮廓才是有效的，以过滤干扰
                 area_max_contour = c
     return area_max_contour  # 返回最大的轮廓
 
-#设置扩展板的RGB灯颜色使其跟要追踪的颜色一致
+#设置扩展板的 RGB 灯颜色使其跟要追踪的颜色一致
 def set_rgb(color):
     if color == "red":
         Board.RGB.setPixelColor(0, Board.PixelColor(255, 0, 0))
@@ -151,7 +151,7 @@ def run(img):
     img_center_x = frame_resize.shape[:2][1]/2  # 获取缩小图像的宽度值的一半
     img_center_y = frame_resize.shape[:2][0]/2
 
-    frame_lab = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2LAB)  # 将图像转换到LAB空间
+    frame_lab = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2LAB)  # 将图像转换到 LAB 空间
     frame_mask = cv2.inRange(frame_lab,
                              (lab_data[target_color]['min'][0],
                               lab_data[target_color]['min'][1],
@@ -171,27 +171,27 @@ def run(img):
             areaMaxContour)  # 获取最小外接圆
         if radius >= 3:
 
-            ########pid处理#########
-            #以图像的中心点的x，y坐标作为设定的值，以当前x，y坐标作为输入#
+            ########pid 处理#########
+            #以图像的中心点的 x，y 坐标作为设定的值，以当前 x，y 坐标作为输入#
 
-            err = abs(img_center_y + 20 - centerY) #计算y轴误差，+20使目标位置处于中心偏下位置
+            err = abs(img_center_y + 20 - centerY) #计算 y 轴误差，+20 使目标位置处于中心偏下位置
             if err < 30:
                 servo1_pid.SetPoint = centerY #误差范围内
             else:
                 servo1_pid.SetPoint = img_center_y + 20 
 
-            servo1_pid.update(centerY) #更新pid
+            servo1_pid.update(centerY) #更新 pid
             tmp = int(servo1_pulse + servo1_pid.output)
             tmp = 950 if tmp < 950 else tmp #舵机角度限幅
             servo1_pulse = 2000 if tmp > 2000 else tmp
 
-            err = abs(img_center_x - centerX) #计算x轴误差
+            err = abs(img_center_x - centerX) #计算 x 轴误差
             if err < 40:
                 servo2_pid.SetPoint = 2 * img_center_x - centerX # ‘2*'将左右对应数值反转
             else:
                 servo2_pid.SetPoint = img_center_x
 
-            servo2_pid.update(2 * img_center_x - centerX) #更新pid
+            servo2_pid.update(2 * img_center_x - centerX) #更新 pid
             tmp = int(servo2_pulse - servo2_pid.output) 
             tmp = 500 if tmp < 500 else tmp #限幅
             servo2_pulse = 2500 if tmp > 2500 else tmp
@@ -200,8 +200,8 @@ def run(img):
             Board.setPWMServoPulse(2, servo2_pulse, 20)
 
             tmp = 0
-            #当舵机位置小于1300时，车身的前后运动由云台的俯仰角驱动
-            #当舵机位置大于等于1300时，车声的前后运动由画面中色块的最小外接圆半径驱动
+            #当舵机位置小于 1300 时，车身的前后运动由云台的俯仰角驱动
+            #当舵机位置大于等于 1300 时，车声的前后运动由画面中色块的最小外接圆半径驱动
             if servo1_pulse < 1300:
                 if  1050 < servo1_pulse < 1200:
                     pitch_pid.SetPoint = servo1_pulse
@@ -227,7 +227,7 @@ def run(img):
             tmp = -100 if tmp < -100 else tmp
             base_speed = -tmp
            
-            #车声转向由云台z轴偏转来驱动
+            #车声转向由云台 z 轴偏转来驱动
             if 1350 < servo2_pulse < 1650:
                 yaw_pid.clear()
                 yaw_pid.SetPoint = servo2_pulse
@@ -246,7 +246,7 @@ def run(img):
             motor2 = base_speed - direct_speed
             motor2_direct = -1 if motor2 < 0 else 1
 
-            motor1 = Misc.map(abs(motor1), 0, 100, 30, 70) #马达在0～30的区间扭矩不够，动不了，做个映射
+            motor1 = Misc.map(abs(motor1), 0, 100, 30, 70) #马达在 0～30 的区间扭矩不够，动不了，做个映射
             motor2 = Misc.map(abs(motor2), 0, 100, 30, 70)
             
             motor1 = int(motor1_direct * motor1)
