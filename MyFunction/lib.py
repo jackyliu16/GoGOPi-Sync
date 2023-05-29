@@ -22,3 +22,21 @@ def getAreaMaxContour(contours):
             contour_area_max = contour_area_temp
             area_max_contour = c
     return area_max_contour, contour_area_max  # 返回最大的轮廓
+
+def getMotor(idx: int) -> int:
+    """get the abs speed of motor
+    """
+    import HiwonderSDK.Board as Board
+    return -Board.getMotor(idx) if idx % 2 == 0 else Board.getMotor(idx)
+
+def setMotor(idx: int, speed: int):
+    """set motor idx into abs speed
+    """
+    import HiwonderSDK.Board as Board
+    Board.setMotor(idx, speed)
+
+def setBothMotor(speed):
+    """setting both motor into same speed
+    """
+    setMotor(1, speed)
+    setMotor(2, speed)
