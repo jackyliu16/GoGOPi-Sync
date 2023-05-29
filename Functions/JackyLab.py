@@ -11,8 +11,8 @@ def setBothMotor(speed: int):
     """
     using for stop the first motor
     """
-    Board.setMotor(0, speed)
     Board.setMotor(1, speed)
+    Board.setMotor(2, speed)
 
 def getAreaMaxContour(contours) -> int:
     # copy from ColorTracking
@@ -51,23 +51,27 @@ def setMotorSpeedDiff(speed: int):
 
 def buzzer_for_second(second: int) -> None:
     import time
-    from HiwonderSDK.Board import Board
+    import HiwonderSDK.Board as Board
     Board.setBuzzer(0)
     time.sleep(second)
     Board.setBuzzer(1)
 
 def diff_speed(motor: int, speed: int) -> None:
-    from HiwonderSDK.Board import Board
-    if motor == 2 or motor == 4:
-        Board.setMotor(motor, Board.getMotor(motor) - 1)
+    import HiwonderSDK.Board as Board
+    print(f"motor {motor} add speed {speed}")
+    print(f"1: {Board.getMotor(1)}, 2:{Board.getMotor(2)}")
+    if motor == 2:
+        print(f"motor {motor} add speed {speed}")
+        Board.setMotor(motor, Board.getMotor(motor) - speed)
     else:
-        Board.setMoter(motor, Board.getMotor(motor) + 1)
+        print("add speed")
+        Board.setMotor(motor, Board.getMotor(motor) + speed)
 
 # 尝试能否通过这个来影响 diff？
 def sigmoid(x: float):
     return 1 / ( 1 + np.exp(-x) )
     
-def tracking(area: tuple[int, int], areaMaxContour: tuple):
+def tracking(area, areaMaxContour: tuple):
     # copy from ColorTracking
     import math
     img_center_x = math.fabs(area[0][1] - area[1][1])

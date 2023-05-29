@@ -1,6 +1,6 @@
 import time
 from Functions.JackyLab import *
-from HiwonderSDK.Board import Board
+import HiwonderSDK.Board as Board
 
 def test_speed():
     Board.setBuzzer(0)
@@ -29,22 +29,26 @@ def test_speed():
 def test_add_speed():
     setBothMotor(0)
     
-    buzzer_for_second(2)
-    diff_speed(1, 20)
+    # buzzer_for_second(1)
+    diff_speed(1, 40)
     time.sleep(5)
-     
-    buzzer_for_second(2)
-    diff_speed(2, 20)
-    time.sleep(5)
+    #  
+    # buzzer_for_second(1)
+    # diff_speed(2, 20)
+    # time.sleep(5)
 
-    buzzer_for_second(2)
-    diff_speed(1, 20)
-    time.sleep(5)
+    # buzzer_for_second(1)
+    # diff_speed(1, 20)
+    # time.sleep(5)
     
-    buzzer_for_second(2)
-    diff_speed(2, -20)
-    time.sleep(5)
+    # buzzer_for_second(1)
+    # diff_speed(2, -20)
+    # time.sleep(5)
 
 
+if __name__ == "__main__":
+    import HiwonderSDK.Board as Board
+    test_add_speed()
 
     
+    setBothMotor(0)

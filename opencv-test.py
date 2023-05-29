@@ -1,10 +1,10 @@
 import cv2
 import numpy as np
 # from Functions.ColorTracking import getAreaMaxContour
-from Functions.JackyLab import getAreaMaxContour
+import HiwonderSDK.Board as Board
+import HiwonderSDK.PID as PID
+import HiwonderSDK.Misc as Misc
 from HiwonderSDK.PID import PID
-from HiwonderSDK.Board import Board
-from HiwonderSDK.Misc import Misc
 from Functions.JackyLab import *
 
 __BinarizationThreshold = 80
@@ -45,11 +45,6 @@ def binary_image(frame):
 
     cv2.drawContours(monitoring_area, contours, -1, (120), 3)
     areaMaxContour = getAreaMaxContour(contours)  # 找到最大的轮廓
-
-    import math
-    print(math.fabs(cv2.contourArea(areaMaxContour)))
-
-    tracking(__Area, areaMaxContour)
 
     return monitoring_area 
 
