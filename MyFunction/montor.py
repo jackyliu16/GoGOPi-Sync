@@ -3,7 +3,8 @@ from typing import *
 from MyFunction.lib import setMotor, getMotor, setBothMotor
 from MyFunction.config import ADD_SPEED, BASE_SPEED
 
-motor_pid = PID(P=0.01, I=0.01, D=0.008)
+motor_pid = PID(P=0.03, I=0.05, D=0.0010)
+# motor_pid = PID(P=0.01, I=0.01, D=0.008)
 
 def init():
     setBothMotor(BASE_SPEED)
@@ -22,7 +23,7 @@ def move(point: Tuple[int, int]) -> None:
     
     motor_pid.update(x)
     tmp = motor_pid.output
-    # print(f"tmp: {tmp}")
+    print(f"tmp: {tmp}")
     setMotor(1, int(getMotor(1) - tmp * ADD_SPEED))
     setMotor(2, int(getMotor(2) + tmp * ADD_SPEED))
     
