@@ -22,7 +22,7 @@ def move(point: Tuple[int, int]) -> None:
     
     motor_pid.update(x)
     tmp = motor_pid.output
-    print(f"tmp: {tmp}")
+    # print(f"tmp: {tmp}")
     setMotor(1, int(getMotor(1) - tmp * ADD_SPEED))
     setMotor(2, int(getMotor(2) + tmp * ADD_SPEED))
     

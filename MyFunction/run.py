@@ -61,14 +61,11 @@ def run(img):
         if __endingFlags:
             import HiwonderSDK.Board as Board
             Board.setBuzzer(1)
-            time.sleep(2)
-            Board.setBuzzer(0)
-            print(time.time() - __endingFlags)
             if time.time() - __endingFlags >= WAITING_TIME:
                 reset()
 
         gray = binarization(img)
-        monitoring_area = get_monitoring_area(gray)
+        monitoring_area = get_monitoring_area(gray, MONITORING_AREA)
 
         (x, y) = get_center_of_maximum_area(monitoring_area)
         # print((x, y))
@@ -83,9 +80,12 @@ def run(img):
 
         # check_if_get_ending_point(monitoring_area)
         if not __endingFlags:
-            __endingFlags = time.time() if check_if_get_ending_point(monitoring_area) else None
-        return gray
+            pass
+            # __endingFlags = time.time() if check_if_get_ending_point(monitoring_area) else None
+            __endingFlags = time.time() if check_if_get_ending_point(get_monitoring_area(gray, END_DETACT_AREA)) else None 
+        # mon = get_monitoring_area(gray, END_DETACT_AREA)
 
+        return gray
     return img
 
 
@@ -93,6 +93,7 @@ def reset():
     import HiwonderSDK.Board as Board
     Board.setMotor(1, 0)
     Board.setMotor(2, 0)
+    Board.setBuzzer(0)
     for i in range(1, 6):
         Board.setPWMServoPulse(i, 1500, 500)
     sys.exit(0)

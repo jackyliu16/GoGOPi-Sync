@@ -52,10 +52,10 @@ def mapping(points: Tuple[Tuple[int, int], Tuple[int, int]]) -> Tuple[Tuple[int,
         Tuple[Tuple[int, int], Tuple[int, int]]: _description_
     """
     from MyFunction.run import camera_size
-    print(camera_size)
-    print(points)
-    print(points[0][0])
-    print(camera_size[0] * points[0][0])
+    # print(camera_size)
+    # print(points)
+    # print(points[0][0])
+    # print(camera_size[0] * points[0][0])
     return (
         (int(camera_size[0] * points[0][0]), int(camera_size[1] * points[0][1])),
         (int(camera_size[0] * points[1][0]), int(camera_size[1] * points[1][1])),
