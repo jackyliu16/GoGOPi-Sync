@@ -62,6 +62,17 @@ def get_center_of_maximum_area(img: np.ndarray) -> Tuple[int, int]:
     contours = cv2.findContours(img_INV, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
     areaMaxContour, value = lib.getAreaMaxContour(contours)  # 找到最大的轮廓
 
+    if value == 0:
+        return (320, 640) # TODO 硬编码去除
     (centerX, centerY), radius = cv2.minEnclosingCircle(areaMaxContour)  # 获取最小外接圆
     
     return (centerX, centerY)
+
+def check_if_get_ending_point(img: np.ndarray) -> bool:
+    """Check if arrive the ending line
+    """    
+    img_INV = cv2.bitwise_not(img) # whiled but neccessary
+    contours = cv2.findContours(img_INV, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
+    areaMaxContour, value = lib.getAreaMaxContour(contours)  # 找到最大的轮廓
+    print(f"size: {value}")
+    return value >= ENDING_SIZE_LIMIT
