@@ -17,7 +17,6 @@ __isStart = False
 __isRunning = False
 __method = method.DETACT
 __Area = []
-CAM = None
 __BinarizationThreshold = 80
 
 if sys.version_info.major == 2:
@@ -25,26 +24,34 @@ if sys.version_info.major == 2:
     sys.exit(0)
 
 def init(resolution: Tuple[int, int]):
-    global __Area, CAM
+    global __Area, __isStart, __isRunning 
     print("init")
-    # CAM = cv2.VideoCapture(0)
-    # resolution = (int(CAM.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(CAM.get(cv2.CAP_PROP_FRAME_WIDTH)))
+    # CAM = cv2.VideoCapture(0) # resolution = (int(CAM.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(CAM.get(cv2.CAP_PROP_FRAME_WIDTH)))
     __Area = [
         # (x, y)
         (int(resolution[0]*0.70), 0), 
         (int(resolution[0]*0.80), resolution[1])
     ]
     __isStart = True
+    __isRunning = False
 
 from MyFunction.imageProcess import detect_color_item
+from MyFunction.imageProcess import binarization
 def run(img):
-    print("run")
+    global __isStart, __isRunning
+    global __Area
     if not __isStart:
         print("error: unstart")
         return img
     
+    if __isStart:
+        if detect_color_item(img, "red"):
+            __isRunning = True
     if __isRunning:
-        detect_color_item(img)
+        gray = binarization(img)
+        print(type(gray))
+        return gray
+    
     
     return img
         

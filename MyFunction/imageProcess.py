@@ -1,17 +1,19 @@
 from MyFunction.config import *
 import cv2
 import yaml_handle
+import numpy as np
+import math
 from MyFunction import lib
+from typing import *
 
 lab_data = None
-def detect_color_item(img, target_color) -> True:
+def detect_color_item(img: np.ndarray, target_color: str) -> bool:
     """if detect color max than DETACT_LIMIT the true
     """
+    from MyFunction.config import DETACT_SIZE_LIMIT
     lab_data = yaml_handle.get_yaml_data(yaml_handle.lab_file_path)
     
     frame_resize = cv2.resize(img, (320, 240), interpolation=cv2.INTER_NEAREST)
-    img_center_x = frame_resize.shape[:2][1]/2  # 获取缩小图像的宽度值的一半
-    img_center_y = frame_resize.shape[:2][0]/2
 
     frame_lab = cv2.cvtColor(frame_resize, cv2.COLOR_BGR2LAB)  # 将图像转换到 LAB 空间
     frame_mask = cv2.inRange(frame_lab,
@@ -28,5 +30,13 @@ def detect_color_item(img, target_color) -> True:
 
     areaMaxContour, maxvalue = lib.getAreaMaxContour(contours)  # 找到最大的轮廓
 
-    print(maxvalue)
+    return maxvalue > DETACT_SIZE_LIMIT
+
+def binarization(img: np.ndarray) -> np.ndarray:
+    """binarization and return image
+    """
+    from MyFunction.config import BINARIZATION_LIMIT
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    _, binary =  cv2.threshold(gray, BINARIZATION_LIMIT, 255, cv2.THRESH_BINARY)
+    return binary
 

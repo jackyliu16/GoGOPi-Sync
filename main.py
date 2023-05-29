@@ -2,15 +2,12 @@ import cv2
 
 from MyFunction import Run
 if __name__ == "__main__":
-    print(1)
     CAM = cv2.VideoCapture(0)
-    print(1)
     resolution = (int(CAM.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(CAM.get(cv2.CAP_PROP_FRAME_WIDTH)))
-    print(1)
     Run.init(resolution)
-    print(1)
     while True:
         ret, img = CAM.read()
+        print(type(img))
         img = Run.run(img)
         cv2.imshow('frame', img)
         
