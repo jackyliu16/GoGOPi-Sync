@@ -37,27 +37,25 @@ def init(resolution: Tuple[int, int]):
     area = mapping(MONITORING_AREA)
 
     __isStart = True
-    __isRunning = True  # TODO
+    # __isRunning = True  # TODO
     __endingFlags = False
 
-
+from MyFunction.lib import setBuzzerForSecond
 # from MyFunction.imageProcess import detect_color_item
 # from MyFunction.imageProcess import binarization
 # from MyFunction.imageProcess import get_monitoring_area
-
-
 def run(img):
     global __isStart, __isRunning, __endingFlags
     global area
     if not __isStart:
         print("error: unstart")
         return img
-    montor.init()
     if __isStart and not __isRunning:
         if detect_color_item(img, "red"):
-            __isRunning = True
-    if __isRunning:
-
+            __isRunning = time.time()
+    if __isRunning and time.time() - __isRunning > 4:
+    # if __isRunning:
+        montor.init()
         if __endingFlags:
             import HiwonderSDK.Board as Board
             Board.setBuzzer(1)
@@ -79,6 +77,7 @@ def run(img):
         montor.move((x, y + area[0][0]))
 
         # check_if_get_ending_point(monitoring_area)
+        # TODO
         if not __endingFlags:
             pass
             # __endingFlags = time.time() if check_if_get_ending_point(monitoring_area) else None
