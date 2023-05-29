@@ -82,9 +82,7 @@ def getMotor(index):
     index = index - 1
     return __motor_speed[index]
 
-def setPWMServoAngle(index, angle):
-    """设置脉宽调制伺服角度
-    """
+def setPWMServoAngle(servo_id, angle):
     if servo_id < 1 or servo_id > 6:
         raise AttributeError("Invalid Servo ID: %d"%servo_id)
     index = servo_id - 1
@@ -103,7 +101,7 @@ def setPWMServoAngle(index, angle):
     return __servo_angle[index]
 
 def setPWMServoPulse(servo_id, pulse = 1500, use_time = 1000):
-    """设置脉宽调制伺服脉冲
+    """转动电机
     """
     if servo_id< 1 or servo_id > 6:
         raise AttributeError("Invalid Servo ID: %d" %servo_id)
@@ -129,7 +127,7 @@ def getPWMServoAngle(servo_id):
     index = servo_id - 1
     return __servo_pulse[index]
 
-def getPWMServoPulse(index):
+def getPWMServoPulse(servo_id):
     if servo_id < 1 or servo_id > 6:
         raise AttributeError("Invalid Servo ID: %d"%servo_id)
     index = servo_id - 1
