@@ -38,24 +38,25 @@ def binary_image(frame):
         (int(resolution[0]*0.80), resolution[1])
     ]
     # print(binary.shape)
-    monitoring_area = binary[__Area[0][0]:__Area[1][0], __Area[0][1]: __Area[1][1]]
-    
-    contours = cv2.findContours(monitoring_area, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
+    monitoring_area = binary[__Area[0][1]: __Area[1][1], __Area[0][0]:__Area[1][0]]
+    monitoring_area_inv = cv2.bitwise_not(monitoring_area, _)
+    contours = cv2.findContours(monitoring_area_inv, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
 
     cv2.drawContours(monitoring_area, contours, -1, (120), 3)
-    areaMaxContour, maxsize = getAreaMaxContour(contours)  # 找到最大的轮廓
+    areaMaxContour, value = getAreaMaxContour(contours)  # 找到最大的轮廓
 
-    (centerX, centerY), radius = cv2.minEnclosingCircle(areaMaxContour)  # 获取最小外接圆
-    img_center_y = ((__Area[0][1]+__Area[1][1])/2) 
-    print(img_center_y, centerY)
-    diff = math.fabs(img_center_y - centerY)
-
-    # 尝试将一开始的图像和现在的监视区域整合到一起，给对应的监测点打点
 
     # tracking(__Area, areaMaxContour)
+    # TODO change the other part
+    img_center_x = math.fabs((__Area[0][0] - __Area[1][0])/2)
+    # img_center_y = math.fabs(__Area[1][1] - __Area[0][1])
 
+    (centerX, centerY), radius = cv2.minEnclosingCircle(
+        areaMaxContour)  # 获取最小外接圆
+ 
+    # print(f"centerX: {centerX}, img_center_X:{img_center_x}")
+    diff = math.fabs(img_center_x - centerX)
     print(diff)
-
     return monitoring_area 
 
 if __name__ == "__main__":
