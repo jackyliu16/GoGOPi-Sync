@@ -1,25 +1,11 @@
 import cv2
 import numpy as np
 # from Functions.ColorTracking import getAreaMaxContour
-import HiwonderSDK.Board as Board
-import HiwonderSDK.PID as PID
-import HiwonderSDK.Misc as Misc
-from HiwonderSDK.PID import PID
 from Functions.JackyLab import *
 
 __BinarizationThreshold = 80
 __Area = []
-servo1_pid = PID(P=0.5, I=0.052, D=0.035)  # pid 初始化 #上下
-servo2_pid = PID(P=0.45, I=0.052, D=0.05)  # pid 初始化 #左右
-pitch_pid = PID(P=0.1, I=0.01, D=0.01) #车身前后
-pitch_pid1 = PID(P=0.08, I=0.01, D=0.01)
-yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
-servo1_pulse = 1500
-servo2_pulse = 1500
-pitch_speed = 0
-yaw_speed = 0
-target_color = ""
-# 
+
 def binary_image(frame):
     global resolution, __Area
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -38,7 +24,8 @@ def binary_image(frame):
         (int(resolution[0]*0.80), resolution[1])
     ]
     # print(binary.shape)
-    monitoring_area = binary[__Area[0][1]: __Area[1][1], __Area[0][0]:__Area[1][0]]
+    monitoring_area = binary[__Area[0][0]:__Area[1][0], __Area[0][1]: __Area[1][1]]
+    # monitoring_area = binary[__Area[0][1]: __Area[1][1], __Area[0][0]:__Area[1][0]]
     monitoring_area_inv = cv2.bitwise_not(monitoring_area, _)
     contours = cv2.findContours(monitoring_area_inv, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[-2]  # 找出所有外轮廓
 
@@ -48,16 +35,23 @@ def binary_image(frame):
 
     # tracking(__Area, areaMaxContour)
     # TODO change the other part
-    img_center_x = math.fabs((__Area[0][0] - __Area[1][0])/2)
-    # img_center_y = math.fabs(__Area[1][1] - __Area[0][1])
+    img_center_x = math.fabs((__Area[0][1] + __Area[1][1])/2)
+    # img_center_y = math.fabs(__Area[0][1] - __Area[0][1])
 
     (centerX, centerY), radius = cv2.minEnclosingCircle(
         areaMaxContour)  # 获取最小外接圆
  
     # print(f"centerX: {centerX}, img_center_X:{img_center_x}")
     diff = math.fabs(img_center_x - centerX)
-    print(diff)
-    return monitoring_area 
+    
+    
+    # 尝试将这个图像合并到原始图像上来方便看    
+    # print(f"x:{centerX}, y:{centerY}")
+    cv2.circle(binary, (int(centerX), int(centerY + __Area[0][0])), 1, (127), 3) 
+    
+    tracking(__Area, areaMaxContour)
+    
+    return binary
 
 if __name__ == "__main__":
     global resolution

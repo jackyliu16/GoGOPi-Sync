@@ -4,7 +4,11 @@ this is a lab just using by jacky
 import math
 import cv2
 import numpy as np
-SPEED_LIMIT = 20
+SPEED_LIMIT = 50 
+
+import HiwonderSDK.Board as Board
+import HiwonderSDK.PID as PID
+
 
 def setBothMotor(speed: int):
     import HiwonderSDK.Board as Board
@@ -80,11 +84,12 @@ def diff_speed(motor: int, speed: int) -> None:
 def sigmoid(x: float):
     return 1 / ( 1 + np.exp(-x) )
     
+yaw_pid = PID(P=0.01, I=0.01, D=0.008) #车身左右
 def tracking(area, areaMaxContour: tuple):
     # copy from ColorTracking
     import math
-    img_center_x = math.fabs(area[0][1] - area[1][1])
-    img_center_y = math.fabs(area[0][0] - area[1][0])
+    img_center_x = (area[0][0] + area[1][0]) / 2
+    img_center_y = (area[0][1] + area[1][1]) / 2
     if areaMaxContour is not None:  # 有找到最大面积
         (centerX, centerY), radius = cv2.minEnclosingCircle(
             areaMaxContour)  # 获取最小外接圆
@@ -92,7 +97,14 @@ def tracking(area, areaMaxContour: tuple):
             # 简易算法
             
             diff = abs(img_center_x - centerX)
-            setMotorSpeedDiff(diff)
+
+            if diff < 30:
+                yaw_pid.setPoint = centerX
+            else:
+                yaw_pid.setPoint = img_center_y + 20
+            
+            
+            
 
             # NOTE 需要提前测试
             
@@ -169,7 +181,7 @@ def tracking(area, areaMaxContour: tuple):
             # tmp = -45 if tmp < -45 else tmp
             # direct_speed = tmp
 
-            # TODO 完成车身驱动部分
+            # # TODO 完成车身驱动部分
             # motor1 = base_speed + direct_speed
             # motor1_direct = -1 if motor1 < 0 else 1
 
