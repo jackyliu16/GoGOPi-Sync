@@ -15,14 +15,14 @@ def setBothMotor(speed: int):
     Board.setMotor(2, speed)
 
 from typing import *
-def getAreaMaxContour(contours) -> Tuple[int, int]:
-    """get the area max contour
+def getAreaMaxContour(contours):
+    """计算最大的 Contour
 
     Args:
-        contours (_type_): the contours you get 
+        contours (_type_): 找到的 Contour
 
     Returns:
-        tuple[int, int]: (contour when max, area when max)
+        tuple[int, int]: (MaxContour, 最大值)
     """
     # copy from ColorTracking
     contour_area_temp = 0
