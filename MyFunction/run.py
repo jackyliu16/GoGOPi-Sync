@@ -80,9 +80,7 @@ def run(img):
         # TODO
         if not __endingFlags:
             pass
-            # __endingFlags = time.time() if check_if_get_ending_point(monitoring_area) else None
             __endingFlags = time.time() if check_if_get_ending_point(get_monitoring_area(gray, END_DETACT_AREA)) else None 
-        # mon = get_monitoring_area(gray, END_DETACT_AREA)
 
         return gray
     return img
